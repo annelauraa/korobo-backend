@@ -20,8 +20,8 @@ const entrepriseController = {
     // Créer un nouvel entreprise
     createEntreprise: async (req, res) => {
         try {
-            const { nom, email, telephone } = req.body; // Extraire les données du corps de la requête
-            const nouvelEntreprise = await Entreprise.create({ nom, email, telephone }); // Créer un entreprise
+            const { nom, email, telephone, adresse, logo } = req.body; // Extraire les données du corps de la requête
+            const nouvelEntreprise = await Entreprise.create({ nom, email, telephone, adresse, logo }); // Créer un entreprise
             res.status(201).json(nouvelEntreprise); // Retourner l'entreprise créé
         } catch (error) {
             handleError(res, error);
@@ -56,6 +56,7 @@ const entrepriseController = {
                         { nom: { [Op.like]: searchTerm } },
                         { email: { [Op.like]: searchTerm } },
                         { telephone: { [Op.like]: searchTerm } },
+                        { adresse: { [Op.like]: searchTerm } }
                     ]
                 }
             });
@@ -71,12 +72,12 @@ const entrepriseController = {
     // Mettre à jour un entreprise
     updateEntreprise: async (req, res) => {
         try {
-            const { nom, email, telephone } = req.body;
+            const { nom, email, telephone, adresse, logo } = req.body;
             const entreprise = await Entreprise.findByPk(req.params.id);
             if (!entreprise) {
                 return res.status(404).json({ message: "Entreprise non trouvé" });
             }
-            await entreprise.update({ nom, email, telephone });
+            await entreprise.update({ nom, email, telephone, adresse, logo });
             res.status(200).json(entreprise);
         } catch (error) {
             handleError(res, error);

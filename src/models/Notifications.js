@@ -17,11 +17,19 @@ module.exports = function(sequelize, DataTypes) {
     },
     id_utilisateur: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'Utilisateurs',
+        key: 'id'
+      }
     },
     id_intervention: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'Interventions',
+        key: 'id'
+      }
     }
   }, {
     sequelize,

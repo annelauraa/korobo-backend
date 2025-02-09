@@ -1,5 +1,7 @@
+const { Op, Sequelize } = require("sequelize");
 const db = require("../models"); // Importer les modèles Sequelize
 const Utilisateur = db.Utilisateurs; // Récupérer le modèle des utilisateurs
+const Entreprise = db.Entreprises; // Récupérer le modèle des entreprises
 
 // Fonction utilitaire pour gérer les erreurs
 const handleError = (res, error) => {
@@ -11,9 +13,21 @@ const utilisateurController = {
         try {
             const { id_entreprise } = req.params;
             const utilisateurs = await Utilisateur.findAll({
+                attributes: [
+                    'id',
+                    'nom',
+                    'email',
+                    // [Sequelize.col('Entreprises.nom'), 'entreprise_nom'] // Ajoute une colonne de l'entreprise
+                ],
                 where: {
                     id_entreprise: id_entreprise
-                }
+                },
+                include: [
+                    {
+                        model: Entreprise,
+                        as: 'entreprise'
+                    }
+                ]
             });
             res.status(200).json(utilisateurs);
         } catch (error) {
@@ -46,6 +60,42 @@ const utilisateurController = {
             handleError(res, error);
         }
     },
+    // lister les techniciens disponnibles
+    getAllUtilisateurByIndex: async (req, res) => {
+
+        try {
+            const { index, id_connected, id_entreprise } = req.params;
+            const searchTerm = `%${index}%`;
+
+            const utilisateur = await Utilisateur.findAll({
+                attributes: ['id', 'nom', 'email'],
+                where: {
+                    [Op.or]: [
+                        { nom: { [Op.like]: searchTerm } },
+                        { email: { [Op.like]: searchTerm } },
+                    ],
+                    [Op.and]: [
+                        { id: { [Op.not]: id_connected } }
+                    ],
+                    [Op.and]: [
+                        { id_entreprise: id_entreprise }
+                    ],
+                }
+            });
+            if (utilisateur == []) {
+                return res.status(404).json({ message: "Aucun technicien trouvée" });
+            }
+            res.status(200).json(utilisateur);
+        } catch (error) {
+            handleError(res, error);
+        }
+    },
+
+    //RechercheR LES techniciens  par disponnibilité
+
+
+
+
 
     // Mettre à jour un utilisateur
     updateUtilisateur: async (req, res) => {

@@ -9,11 +9,19 @@ module.exports = function(sequelize, DataTypes) {
     },
     id_site: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'Sites',
+        key: 'id'
+      }
     },
     id_materiel: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'Materiels',
+        key: 'id'
+      }
     },
     quantite: {
       type: DataTypes.INTEGER,

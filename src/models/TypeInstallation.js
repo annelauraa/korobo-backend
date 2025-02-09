@@ -13,7 +13,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     id_entreprise: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: {
+        model: 'Entreprises',
+        key: 'id'
+      }
     }
   }, {
     sequelize,

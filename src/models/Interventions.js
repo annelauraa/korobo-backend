@@ -21,11 +21,19 @@ module.exports = function(sequelize, DataTypes) {
     },
     id_site: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'Sites',
+        key: 'id'
+      }
     },
     id_technicien: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'Utilisateurs',
+        key: 'id'
+      }
     }
   }, {
     sequelize,

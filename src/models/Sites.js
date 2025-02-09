@@ -37,24 +37,44 @@ module.exports = function(sequelize, DataTypes) {
     },
     id_entreprise: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'Entreprises',
+        key: 'id'
+      }
     },
     installateur: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      comment: "Id_technicien"
+      comment: "Id_technicien",
+      references: {
+        model: 'Utilisateurs',
+        key: 'id'
+      }
     },
     type_contrat: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'ContratSAV',
+        key: 'id'
+      }
     },
     type_installation: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'TypeInstallation',
+        key: 'id'
+      }
     },
     type_electrique: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      references: {
+        model: 'InstallationElectrique',
+        key: 'id'
+      }
     }
   }, {
     sequelize,
