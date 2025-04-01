@@ -2,10 +2,16 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const db = require("../models");
 const Utilisateur = db.Utilisateurs;
+const Entreprises = db.Entreprises;
 const authController = {
     register: async (req, res) => {
         try {
             const { nom, email, mot_de_passe, role, id_entreprise } = req.body;
+
+            const entreprise = await Entreprises.findByPk(id_entreprise);
+            if (!entreprise) {
+                throw new Error('L\'entreprise avec cet ID n\'existe pas.');
+            }
 
             const hashedPassword = await bcrypt.hash(mot_de_passe, 10);
 
@@ -17,10 +23,9 @@ const authController = {
                 id_entreprise
             });
 
-
-
             res.status(201).json({ message: "Utilisateur créé", userId: newUser.id_utilisateur });
         } catch (error) {
+            console.log(error);
             res.status(500).json({ error: "Erreur lors de l'inscription" });
         }
     },
